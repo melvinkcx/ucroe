@@ -74,6 +74,28 @@ def test_decorator_with_custom_cache_backend():
     assert len(custom_cache_backend._cache) == 1
 
 
+def test_on_exception_callback():
+    mock_cb = MagicMock()
+
+    gen_fn = MagicMock(side_effect=[1, ValueError, ValueError, ValueError, 2])
+
+    @cached_result_on_exception(on_exception=mock_cb)
+    def f(): return gen_fn()
+
+    assert f() == 1
+    mock_cb.assert_not_called()
+
+    assert f() == 1
+    assert mock_cb.call_count == 1
+    assert f() == 1
+    assert mock_cb.call_count == 2
+    assert f() == 1
+    assert mock_cb.call_count == 3
+
+    assert f() == 2
+    assert mock_cb.call_count == 3
+
+
 def test_decorated_func_properly_wrapped():
     @cached_result_on_exception
     def f(): ...
