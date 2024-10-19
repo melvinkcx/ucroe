@@ -42,7 +42,7 @@ class GlobalConfig:
     DEFAULTS: ConfigDict = {
         "LOG_EXCEPTION_BY_DEFAULT": False,
         "HAS_DJANGO": False,
-        "BACKEND": "ucroe.cache_backend.cachetools.LRUCacheBackend",
+        "BACKEND": "ucroe.cache_backend.cachetools.LRUBackend",
         "BACKEND_CONFIG": {"maxsize": 100},
     }
 

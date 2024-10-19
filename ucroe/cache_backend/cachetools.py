@@ -3,9 +3,14 @@ import cachetools
 from ucroe.cache_backend.abc import CacheBackend
 
 
-class LRUCacheBackend(CacheBackend):
-    def __init__(self, maxsize, **kwargs):
-        self.cache = cachetools.LRUCache(maxsize=maxsize, **kwargs)
+class CachetoolsBackendMixin:
+    cache_cls = None
+
+    def __init__(self, **kwargs):
+        if not self.cache_cls:
+            raise NotImplementedError(f"{self.__class__.__name__}.cache_cls is not defined")
+
+        self.cache = self.cache_cls(**kwargs)
 
     def get(self, key, **kwargs):
         return self.cache.get(key, **kwargs)
@@ -16,3 +21,31 @@ class LRUCacheBackend(CacheBackend):
     @property
     def current_size(self):
         return self.cache.currsize
+
+
+class FIFOBackend(CachetoolsBackendMixin, CacheBackend):
+    cache_cls = cachetools.FIFOCache
+
+
+class LFUBackend(CachetoolsBackendMixin, CacheBackend):
+    cache_cls = cachetools.LFUCache
+
+
+class LRUBackend(CachetoolsBackendMixin, CacheBackend):
+    cache_cls = cachetools.LRUCache
+
+
+class MRUBackend(CachetoolsBackendMixin, CacheBackend):
+    cache_cls = cachetools.MRUCache
+
+
+class RRBackend(CachetoolsBackendMixin, CacheBackend):
+    cache_cls = cachetools.RRCache
+
+
+class TTLBackend(CachetoolsBackendMixin, CacheBackend):
+    cache_cls = cachetools.TTLCache
+
+
+class TLRUBackend(CachetoolsBackendMixin, CacheBackend):
+    cache_cls = cachetools.TLRUCache
