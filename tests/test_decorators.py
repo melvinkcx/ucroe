@@ -1,12 +1,19 @@
+import os
 from unittest.mock import MagicMock
 
 import pytest
 
 from ucroe.cache_backend.abc import CacheBackend
-from ucroe.decorators import cached_result_on_exception
+from ucroe.cache_backend.cachetools import TTLBackend
+from ucroe.decorators import CachedResultOnException
 
 
-def test_use_cached_value_on_exception():
+@pytest.fixture
+def cached_result_on_exception():
+    return CachedResultOnException()
+
+
+def test_use_cached_value_on_exception(cached_result_on_exception):
     mock_http_call = MagicMock(side_effect=[1, 2, ValueError, 3, 4])
 
     @cached_result_on_exception
@@ -20,7 +27,7 @@ def test_use_cached_value_on_exception():
     assert f() == 4
 
 
-def test_raise_when_cached_value_is_absent():
+def test_raise_when_cached_value_is_absent(cached_result_on_exception):
     gen_fn = MagicMock(side_effect=[ValueError])
 
     @cached_result_on_exception
@@ -32,7 +39,7 @@ def test_raise_when_cached_value_is_absent():
 
 
 @pytest.mark.parametrize("log_exception", [True, False])
-def test_option__log_exception(log_exception, caplog):
+def test_option__log_exception(log_exception, caplog, cached_result_on_exception):
     gen_fn = MagicMock(side_effect=[1, ValueError])
 
     @cached_result_on_exception(log_exception=log_exception)
@@ -54,7 +61,7 @@ def test_option__log_exception(log_exception, caplog):
         assert len(caplog.record_tuples) == 0
 
 
-def test_decorator_with_custom_cache_backend():
+def test_decorator_with_custom_cache_backend(cached_result_on_exception):
     class CustomCacheBackend(CacheBackend):
         def __init__(self):
             self._cache = {}
@@ -78,7 +85,7 @@ def test_decorator_with_custom_cache_backend():
     assert len(custom_cache_backend._cache) == 1
 
 
-def test_on_exception_callback():
+def test_on_exception_callback(cached_result_on_exception):
     mock_cb = MagicMock()
 
     gen_fn = MagicMock(side_effect=[1, ValueError, ValueError, ValueError, 2])
@@ -101,14 +108,32 @@ def test_on_exception_callback():
     assert mock_cb.call_count == 3
 
 
-def test_decorated_func_properly_wrapped():
+def test_set_backend_through_env_var(mocker):
+    mocker.patch.dict(
+        os.environ,
+        {
+            "UCROE_BACKEND": "ucroe.cache_backend.cachetools.TTLBackend",
+            "UCROE_BACKEND_CONFIG": '{"ttl": 5, "maxsize": 100}',
+        },
+    )
+    cached_result_on_exception = CachedResultOnException()
+
+    @cached_result_on_exception
+    def f(): ...
+
+    f()
+
+    assert isinstance(cached_result_on_exception.cache, TTLBackend)
+
+
+def test_decorated_func_properly_wrapped(cached_result_on_exception):
     @cached_result_on_exception
     def f(): ...
 
     assert f.__qualname__ == "test_decorated_func_properly_wrapped.<locals>.f"
 
 
-def test_decorating_without_options_1():
+def test_decorating_without_options_1(cached_result_on_exception):
     mocked_value = MagicMock()
 
     @cached_result_on_exception
@@ -118,7 +143,7 @@ def test_decorating_without_options_1():
     assert f() == mocked_value
 
 
-def test_decorating_without_options_2():
+def test_decorating_without_options_2(cached_result_on_exception):
     mocked_value = MagicMock()
 
     @cached_result_on_exception()
@@ -128,7 +153,7 @@ def test_decorating_without_options_2():
     assert f() == mocked_value
 
 
-def test_decorating_with_options_1():
+def test_decorating_with_options_1(cached_result_on_exception):
     mocked_value = MagicMock()
 
     @cached_result_on_exception(log_exception=True)

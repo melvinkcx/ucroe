@@ -1,9 +1,9 @@
-import functools
 import json
 import os
 from contextlib import suppress
-from functools import cached_property
-from typing import TypedDict, Mapping
+from typing import Mapping, TypedDict
+
+from ucroe.exceptions import DjangoSettingNotFound
 
 try:
     from django.conf import settings
@@ -15,15 +15,8 @@ except ImportError:
 
 class ConfigDict(TypedDict, total=False):
     LOG_EXCEPTION_BY_DEFAULT: bool
-    HAS_DJANGO: bool
     BACKEND: str
     BACKEND_CONFIG: dict
-
-
-class _Exception(Exception): ...
-
-
-class DjangoNotAvailable(_Exception): ...
 
 
 class GlobalConfig:
@@ -41,7 +34,6 @@ class GlobalConfig:
 
     DEFAULTS: ConfigDict = {
         "LOG_EXCEPTION_BY_DEFAULT": False,
-        "HAS_DJANGO": False,
         "BACKEND": "ucroe.cache_backend.cachetools.LRUBackend",
         "BACKEND_CONFIG": {"maxsize": 100},
     }
@@ -50,7 +42,7 @@ class GlobalConfig:
         if (u_name := name.upper()) in self.DEFAULTS:
             return self.get_config(u_name)
 
-    @cached_property
+    @property
     def backend_config(self):
         value = self.get_config("BACKEND_CONFIG")
 
@@ -63,16 +55,17 @@ class GlobalConfig:
 
         return {}
 
-    @functools.cache
     def get_config(self, name: str):
+        prefixed_name = f"UCROE_{name}"
+
         # 1. try getting it from django settings
         try:
-            return self.get_from_django_settings(name)
-        except DjangoNotAvailable:
+            return self.get_from_django_settings(prefixed_name)
+        except DjangoSettingNotFound:
             ...
 
         # 2. get it from env var
-        if value := os.getenv(name):
+        if value := os.environ.get(prefixed_name):
             return value
 
         # 3. use the default value
@@ -81,11 +74,14 @@ class GlobalConfig:
     @staticmethod
     def get_from_django_settings(name: str):
         if not HAS_DJANGO:
-            raise DjangoNotAvailable
+            raise DjangoSettingNotFound
 
         from django.core.exceptions import ImproperlyConfigured
 
         try:
-            return getattr(settings, name)
+            if hasattr(settings, name):
+                return getattr(settings, name)
         except ImproperlyConfigured:
-            raise DjangoNotAvailable
+            raise DjangoSettingNotFound
+
+        raise DjangoSettingNotFound

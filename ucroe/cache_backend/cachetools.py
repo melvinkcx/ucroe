@@ -4,11 +4,13 @@ from ucroe.cache_backend.abc import CacheBackend
 
 
 class CachetoolsBackendMixin:
-    cache_cls = None
+    cache_cls: type[cachetools.Cache]
 
     def __init__(self, **kwargs):
         if not self.cache_cls:
-            raise NotImplementedError(f"{self.__class__.__name__}.cache_cls is not defined")
+            raise NotImplementedError(
+                f"{self.__class__.__name__}.cache_cls is not defined"
+            )
 
         self.cache = self.cache_cls(**kwargs)
 

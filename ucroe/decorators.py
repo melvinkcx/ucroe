@@ -2,8 +2,9 @@ import functools
 import importlib
 import inspect
 import logging
+from typing import Any
 
-from typing_extensions import TypeVar, Callable, ParamSpec, TypedDict, Unpack
+from typing_extensions import Callable, ParamSpec, TypedDict, TypeVar, Unpack
 
 from ucroe.cache_backend.abc import CacheBackend
 from ucroe.config import GlobalConfig
@@ -51,15 +52,25 @@ class CachedResultOnException:
         else:
             return self.gen_wrapper_with_options(**options)(func=func_)
 
-    def run(self, options: DecoratorOptionDict, func: Callable[P, R], *args, **kwargs):
+    @staticmethod
+    def key_formatter(func: Callable[P, R], *args: P.args, **kwargs: P.kwargs) -> Any:
         # cache key: the positional and keyword arguments to the function must be hashable
-        c_key = (
+        return (
             id(func),
             func.__module__,
             func.__qualname__,
             args,
             tuple(sorted(kwargs.items())),
         )
+
+    def run(
+        self,
+        options: DecoratorOptionDict,
+        func: Callable[P, R],
+        *args: P.args,
+        **kwargs: P.kwargs,
+    ) -> R:
+        c_key = self.key_formatter(func, *args, **kwargs)
         cache = options.get("cache") or self.cache
 
         try:
