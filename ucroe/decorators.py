@@ -41,7 +41,11 @@ class CachedResultOnException:
 
         return self._cache
 
-    def __call__(self, func_: Callable[P, R] | None = None, **options: Unpack[DecoratorOptionDict]):
+    def __call__(
+        self,
+        func_: Callable[P, R] | None = None,
+        **options: Unpack[DecoratorOptionDict],
+    ):
         if func_ is None:
             return self.gen_wrapper_with_options(**options)
         else:
@@ -49,7 +53,13 @@ class CachedResultOnException:
 
     def run(self, options: DecoratorOptionDict, func: Callable[P, R], *args, **kwargs):
         # cache key: the positional and keyword arguments to the function must be hashable
-        c_key = (id(func), func.__module__, func.__qualname__, args, tuple(sorted(kwargs.items())))
+        c_key = (
+            id(func),
+            func.__module__,
+            func.__qualname__,
+            args,
+            tuple(sorted(kwargs.items())),
+        )
         cache = options.get("cache") or self.cache
 
         try:
@@ -68,17 +78,19 @@ class CachedResultOnException:
                 caller_fn: str = caller_frame[2].function
                 logger.warning(
                     f"{caller_fn} -> {func.__qualname__} raised during execution, cached value will be returned",
-                    exc_info=exc
+                    exc_info=exc,
                 )
 
             # invoke on_exception hook
-            if (on_exception_fn := options.get("on_exception")) and callable(on_exception_fn):
+            if (on_exception_fn := options.get("on_exception")) and callable(
+                on_exception_fn
+            ):
                 try:
                     on_exception_fn(exc)
                 except Exception as exc_:
                     logger.warning(
                         f"on_exception hook of {func.__qualname__} raised during execution",
-                        exc_info=exc_
+                        exc_info=exc_,
                     )
 
         return ret_val

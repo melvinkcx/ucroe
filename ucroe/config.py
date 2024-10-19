@@ -31,6 +31,7 @@ class GlobalConfig:
     1. get config from django settings
     2. get from environment variables
     """
+
     _instance = None
 
     def __new__(cls, *args, **kwargs):

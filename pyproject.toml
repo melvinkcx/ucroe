@@ -18,6 +18,9 @@ ruff = "^0.7.0"
 pytest = "^8.3.3"
 pytest-env = "^1.1.5"
 pytest-mock = "^3.14.0"
+mypy = "~1.11"
+types-cachetools = "^5.5.0.20240820"
+django-stubs = {extras = ["compatible-mypy"], version = "^5.1.0"}
 
 [build-system]
 requires = ["poetry-core"]

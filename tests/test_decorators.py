@@ -44,8 +44,11 @@ def test_option__log_exception(log_exception, caplog):
 
     if log_exception:
         assert caplog.record_tuples == [
-            ('ucroe.decorators', 30,
-             'test_option__log_exception -> test_option__log_exception.<locals>.f raised during execution, cached value will be returned')
+            (
+                "ucroe.decorators",
+                30,
+                "test_option__log_exception -> test_option__log_exception.<locals>.f raised during execution, cached value will be returned",
+            )
         ]
     else:
         assert len(caplog.record_tuples) == 0
@@ -65,7 +68,8 @@ def test_decorator_with_custom_cache_backend():
     custom_cache_backend = CustomCacheBackend()
 
     @cached_result_on_exception(cache=custom_cache_backend)
-    def f(): return True
+    def f():
+        return True
 
     assert f()
     assert f()
@@ -80,7 +84,8 @@ def test_on_exception_callback():
     gen_fn = MagicMock(side_effect=[1, ValueError, ValueError, ValueError, 2])
 
     @cached_result_on_exception(on_exception=mock_cb)
-    def f(): return gen_fn()
+    def f():
+        return gen_fn()
 
     assert f() == 1
     mock_cb.assert_not_called()
@@ -107,7 +112,8 @@ def test_decorating_without_options_1():
     mocked_value = MagicMock()
 
     @cached_result_on_exception
-    def f(): return mocked_value
+    def f():
+        return mocked_value
 
     assert f() == mocked_value
 
@@ -116,7 +122,8 @@ def test_decorating_without_options_2():
     mocked_value = MagicMock()
 
     @cached_result_on_exception()
-    def f(): return mocked_value
+    def f():
+        return mocked_value
 
     assert f() == mocked_value
 
@@ -125,6 +132,7 @@ def test_decorating_with_options_1():
     mocked_value = MagicMock()
 
     @cached_result_on_exception(log_exception=True)
-    def f(): return mocked_value
+    def f():
+        return mocked_value
 
     assert f() == mocked_value
