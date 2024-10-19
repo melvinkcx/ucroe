@@ -16,7 +16,16 @@ cachetools = "^5.5.0"
 tenacity = "^9.0.0"
 ruff = "^0.7.0"
 pytest = "^8.3.3"
+pytest-env = "^1.1.5"
+pytest-mock = "^3.14.0"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+minversion = 8.0
+addopts = "-s"
+
+[tool.pytest_env]
+PYTHONBREAKPOINT = "ipdb.set_trace"
