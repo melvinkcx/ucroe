@@ -15,6 +15,6 @@ jobs:
         run: poetry install
       - name: Build and release to PyPI
         run: |
-          poetry source add testpypi https://test.pypi.org/simple/
+          poetry source add testpypi "https://test.pypi.org/legacy/"
           poetry config pypi-token.testpypi ${{ secrets.TESTPYPI_TOKEN }}
           poetry publish --build -r testpypi 
