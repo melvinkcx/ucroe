@@ -1,5 +1,8 @@
 name: lint, test
-on: push
+on:
+  push:
+    tags-ignore:
+      - "**"
 
 jobs:
   ci:
