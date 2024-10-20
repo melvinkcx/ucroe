@@ -1,7 +1,7 @@
 name: lint, test
 on:
   push:
-    tags-ignore:
+    branches:
       - "**"
 
 jobs:
