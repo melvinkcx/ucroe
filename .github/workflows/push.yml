@@ -1,0 +1,27 @@
+name: lint, test
+on: push
+
+jobs:
+  ci:
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: [ "3.10", "3.11", "3.12", "3.13" ]
+    runs-on: linux
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Run image
+        uses: abatilo/actions-poetry@v3
+      - name: Install deps
+        run: poetry install
+      - name: Run ruff format check
+        run: ruff format --check
+      - name: Run ruff check
+        run: ruff check
+      - name: Run mypy
+        run: mypy .
+      - name: Run pytest
+        run: pytest

@@ -20,7 +20,7 @@ pytest-env = "^1.1.5"
 pytest-mock = "^3.14.0"
 mypy = "~1.11"
 types-cachetools = "^5.5.0.20240820"
-django-stubs = {extras = ["compatible-mypy"], version = "^5.1.0"}
+django-stubs = { extras = ["compatible-mypy"], version = "^5.1.0" }
 django = "^5.1.2"
 pytest-django = "^4.9.0"
 isort = "^5.13.2"
@@ -32,6 +32,9 @@ build-backend = "poetry.core.masonry.api"
 [tool.pytest.ini_options]
 minversion = 8.0
 addopts = "-s"
+filterwarnings = [
+    "ignore::django.core.cache.CacheKeyWarning"
+]
 
 [tool.pytest_env]
 PYTHONBREAKPOINT = "ipdb.set_trace"
