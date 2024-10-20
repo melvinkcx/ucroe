@@ -2,6 +2,15 @@ import cachetools
 
 from ucroe.cache_backend.abc import CacheBackend
 
+__all__ = (
+    "FIFOBackend",
+    "LFUBackend",
+    "LRUBackend",
+    "RRBackend",
+    "TTLBackend",
+    "TLRUBackend",
+)
+
 
 class CachetoolsBackendMixin:
     cache_cls: type[cachetools.Cache]
@@ -35,10 +44,6 @@ class LFUBackend(CachetoolsBackendMixin, CacheBackend):
 
 class LRUBackend(CachetoolsBackendMixin, CacheBackend):
     cache_cls = cachetools.LRUCache
-
-
-class MRUBackend(CachetoolsBackendMixin, CacheBackend):
-    cache_cls = cachetools.MRUCache
 
 
 class RRBackend(CachetoolsBackendMixin, CacheBackend):

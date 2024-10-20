@@ -12,6 +12,12 @@ try:
 except ImportError:
     HAS_DJANGO = False
 
+__all__ = (
+    "HAS_DJANGO",
+    "ConfigDict",
+    "GlobalConfig",
+)
+
 
 class ConfigDict(TypedDict, total=False):
     LOG_EXCEPTION_BY_DEFAULT: bool

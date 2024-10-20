@@ -5,7 +5,7 @@ import pytest
 
 from ucroe.cache_backend.abc import CacheBackend
 from ucroe.cache_backend.cachetools import TTLBackend
-from ucroe.decorators import CachedResultOnException
+from ucroe import CachedResultOnException
 
 
 @pytest.fixture

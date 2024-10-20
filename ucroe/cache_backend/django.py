@@ -4,6 +4,8 @@ from ucroe.cache_backend.abc import CacheBackend
 from ucroe.config import HAS_DJANGO
 from ucroe.exceptions import DjangoSettingNotFound
 
+__all__ = ("DjangoBackend",)
+
 
 class DjangoBackend(CacheBackend):
     def __init__(self, cache_name: str | None = None, **kwargs):

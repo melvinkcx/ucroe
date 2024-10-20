@@ -1,5 +1,7 @@
 import abc
 
+__all__ = ("CacheBackend",)
+
 
 class CacheBackend(abc.ABC):
     @abc.abstractmethod

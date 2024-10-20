@@ -1,3 +1,9 @@
+__all__ = (
+    "BaseUCROEException",
+    "DjangoSettingNotFound",
+)
+
+
 class BaseUCROEException(Exception): ...
 
 

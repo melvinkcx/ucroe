@@ -4,7 +4,7 @@ import pytest
 from django.core.cache import caches
 
 from ucroe.cache_backend.django import DjangoBackend
-from ucroe.decorators import CachedResultOnException
+from ucroe import CachedResultOnException
 
 
 @pytest.fixture(autouse=True, scope="session")

@@ -15,6 +15,12 @@ from ucroe.config import GlobalConfig
 
 logger = logging.getLogger(__name__)
 
+__all__ = (
+    "cached_result_on_exception",
+    "CachedResultOnException",
+    "DecoratorOptionDict",
+)
+
 P = ParamSpec("P")
 R = TypeVar("R")
 
