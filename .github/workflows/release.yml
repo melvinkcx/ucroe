@@ -1,7 +1,7 @@
 name: prerelease
 on:
   release:
-    types: [ published ]  # will run when draft is created
+    types: [ prereleased ]  # will run when draft is created
 
 jobs:
   ci:
@@ -15,5 +15,6 @@ jobs:
         run: poetry install
       - name: Build and release to PyPI
         run: |
+          poetry source add testpypi https://test.pypi.org/simple/
           poetry config pypi-token.testpypi ${{ secrets.TESTPYPI_TOKEN }}
           poetry publish --build -r testpypi 
