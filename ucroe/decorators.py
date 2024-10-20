@@ -2,11 +2,12 @@ import functools
 import importlib
 import inspect
 import logging
+import sys
 from typing import Any, Callable, ParamSpec, TypedDict, TypeVar
 
-try:
+if sys.version_info >= (3, 11):
     from typing import Unpack
-except ImportError:
+else:
     from typing_extensions import Unpack
 
 from ucroe.cache_backend.abc import CacheBackend
