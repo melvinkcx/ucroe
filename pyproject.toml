@@ -1,14 +1,15 @@
 [tool.poetry]
 name = "ucroe"
-version = "0.1.0a0"
+version = "0.1.0a1"
 description = "a Python decorator that caches a function’s return value and reuses it if the function raises an exception on subsequent calls"
-authors = ["melvin <melvinkcx@gmail.com>"]
+authors = ["Melvin Koh <melvinkcx@gmail.com>"]
 license = "MIT"
 readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.10"
 cachetools = "^5.0.0"
+typing-extensions = { version = "^4.1", python = "<=3.10" }
 
 [tool.poetry.group.dev.dependencies]
 ipython = "^8.28.0"

@@ -1,0 +1,19 @@
+name: prerelease
+on:
+  release:
+    types: [ published ]  # will run when draft is created
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v4
+      - name: Run image
+        uses: abatilo/actions-poetry@v3
+      - name: Install deps
+        run: poetry install
+      - name: Build and release to PyPI
+        run: |
+          poetry config pypi-token.testpypi ${{ secrets.TESTPYPI_TOKEN }}
+          poetry publish --build -r testpypi 

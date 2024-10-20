@@ -2,9 +2,12 @@ import functools
 import importlib
 import inspect
 import logging
-from typing import Any
+from typing import Any, Callable, ParamSpec, TypedDict, TypeVar
 
-from typing_extensions import Callable, ParamSpec, TypedDict, TypeVar, Unpack
+try:
+    from typing import Unpack
+except ImportError:
+    from typing_extensions import Unpack
 
 from ucroe.cache_backend.abc import CacheBackend
 from ucroe.config import GlobalConfig
