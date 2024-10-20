@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ucroe"
-version = "0.1.0a1"
+version = "0.1.0a2"
 description = "a Python decorator that caches a function’s return value and reuses it if the function raises an exception on subsequent calls"
 authors = ["Melvin Koh <melvinkcx@gmail.com>"]
 license = "MIT"
