@@ -3,9 +3,9 @@ from unittest.mock import MagicMock
 
 import pytest
 
+from ucroe import CachedResultOnException
 from ucroe.cache_backend.abc import CacheBackend
 from ucroe.cache_backend.cachetools import TTLBackend
-from ucroe import CachedResultOnException
 
 
 @pytest.fixture
@@ -75,12 +75,18 @@ def test_decorator_with_custom_cache_backend(cached_result_on_exception):
     custom_cache_backend = CustomCacheBackend()
 
     @cached_result_on_exception(cache=custom_cache_backend)
-    def f():
+    def f1():
         return True
 
-    assert f()
-    assert f()
-    assert f()
+    @cached_result_on_exception()
+    def f2():
+        return False
+
+    assert f1()
+    assert f1()
+    assert f1()
+    assert not f2()
+    assert not f2()
 
     assert len(custom_cache_backend._cache) == 1
 
