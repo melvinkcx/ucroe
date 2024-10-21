@@ -26,6 +26,7 @@ django-stubs = { extras = ["compatible-mypy"], version = "^5.1.0" }
 django = "^5.1.2"
 pytest-django = "^4.9.0"
 isort = "^5.13.2"
+pytest-cov = "^5.0.0"
 
 [build-system]
 requires = ["poetry-core"]
