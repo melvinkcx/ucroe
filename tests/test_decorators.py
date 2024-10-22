@@ -181,4 +181,3 @@ def test_decorating_func_that_returns_none(cached_result_on_exception):
 
     assert f() is None
     assert f() is None
-

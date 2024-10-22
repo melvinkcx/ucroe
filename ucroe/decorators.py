@@ -101,7 +101,9 @@ class CachedResultOnException:
 
         return cached_value
 
-    def _handle_log_exception_option(self, func, options, exc_info):
+    def _handle_log_exception_option(
+        self, func: Callable[P, R], options: DecoratorOptionDict, exc_info: Exception
+    ):
         if options.get("log_exception", self._config.LOG_EXCEPTION_BY_DEFAULT):
             caller_frame = inspect.getouterframes(inspect.currentframe())
             caller_fn: str = caller_frame[3].function
@@ -110,7 +112,9 @@ class CachedResultOnException:
                 exc_info=exc_info,
             )
 
-    def _handle_on_exception_hook(self, func, options, exc_info):
+    def _handle_on_exception_hook(
+        self, func: Callable[P, R], options: DecoratorOptionDict, exc_info: Exception
+    ):
         if (on_exception_fn := options.get("on_exception")) and callable(
             on_exception_fn
         ):
