@@ -29,6 +29,9 @@ class CachetoolsBackendMixin:
     def set(self, key, value, **kwargs):
         self.cache[key] = value
 
+    def has(self, key, **kwargs) -> bool:
+        return key in self.cache
+
     @property
     def current_size(self):
         return self.cache.currsize

@@ -10,6 +10,9 @@ classifiers = [
     "Topic :: Utilities",
     "Framework :: Django"
 ]
+[project.urls]
+Homepage = "https://github.com/melvinkcx/ucroe"
+Issues = "https://github.com/melvinkcx/ucroe/issues"
 
 [tool.poetry.dependencies]
 python = "^3.10"

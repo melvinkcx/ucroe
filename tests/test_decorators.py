@@ -72,6 +72,9 @@ def test_decorator_with_custom_cache_backend(cached_result_on_exception):
         def set(self, key, value, **kwargs):
             self._cache[key] = value
 
+        def has(self, key, **kwargs):
+            return key in self._cache
+
     custom_cache_backend = CustomCacheBackend()
 
     @cached_result_on_exception(cache=custom_cache_backend)
@@ -167,3 +170,15 @@ def test_decorating_with_options_1(cached_result_on_exception):
         return mocked_value
 
     assert f() == mocked_value
+
+
+def test_decorating_func_that_returns_none(cached_result_on_exception):
+    gen_fn = MagicMock(side_effect=[None, ValueError])
+
+    @cached_result_on_exception
+    def f():
+        return gen_fn()
+
+    assert f() is None
+    assert f() is None
+
